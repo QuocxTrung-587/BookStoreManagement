@@ -1,0 +1,92 @@
+<div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-4 text-white min-vh-100"
+    style="height: 100%; width: 100%;">
+    <div class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+        <a href="./index.html"><img src="../Assects/images/logo_book3.png" id="navlink0" alt="" width="200px"></a>
+    </div>
+    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu" style="width: 100%;">
+        <li>
+            <a href="./lapphieunhap.html" class="nav-link px-0 align-middle" id="navlink1"> 
+                <i class="fs-4 bi bi-pencil-square"></i> <span class="ms-1 d-none d-sm-inline">Lập phiếu
+                    nhập</span> </a>
+        </li>
+        <li>
+            <a href="./quanliphieunhap.html" class="nav-link px-0 align-middle" id="navlink2">
+                <i class="fs-4 bi bi-file-earmark-spreadsheet"></i><span class="ms-1 d-none d-sm-inline">Quản
+                    lí phiếu nhập</span> </a>
+        </li>
+        <li>
+            <a href="./quanlihanghoa.html" class="nav-link px-0 align-middle" id="navlink3">
+                <i class="fs-4 bi bi-book-half"></i> <span class="ms-1 d-none d-sm-inline ">Quản lí hàng
+                    hóa</span> </a>
+        </li>
+        <li>
+            <a href="./laphoadon.html" class="nav-link px-0 align-middle"  id="navlink4">
+                <i class="fs-4 bi bi-clipboard2-check"></i> <span class="ms-1 d-none d-sm-inline ">Lập hóa
+                    đơn</span> </a>
+        </li>
+        <li>
+            <a href="./quanlihoadon.html" class="nav-link px-0 align-middle"  id="navlink5">
+                <i class="fs-4 bi bi-file-earmark-ruled"></i> <span class="ms-1 d-none d-sm-inline ">Quản lí
+                    hóa đơn</span> </a>
+        </li>
+        <li>
+            <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle" id="navlink6">
+                <i class="fs-4 bi bi-database-check"></i> <span class="ms-1 d-none d-sm-inline ">Thống
+                    kê</span> </a>
+            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
+                <li class="w-100">
+                    <a href="./tonkho.html" class="nav-link px-0"  id="navlink7"> <span class="d-none d-sm-inline">Tồn kho</span></a>
+                </li>
+                <li>
+                    <a href="./thuchi.html" class="nav-link px-0"  id="navlink8"> <span class="d-none d-sm-inline">Thu chi</span></a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="./quanlitaikhoan.html" class="nav-link px-0 align-middle" id="navlink9">
+                <i class="fs-4 bi bi-file-earmark-ruled"></i> <span class="ms-1 d-none d-sm-inline ">Quản lí
+                    tài khoản</span> </a>
+        </li>
+    </ul>
+    <hr>
+    <div class="dropdown pb-4 mt-auto">
+        <div class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="../Assects/images/cute.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
+            <!-- Tên chi nhánh -->
+            <span class="d-none d-sm-inline mx-1" id="tenChiNhanh"></span>
+        </div>
+        <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+            <li><a class="dropdown-item" onclick="Logout()">Đăng xuất</a></li>
+        </ul>
+    </div>
+</div>
+<!-- toast -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="liveToast" class="toast align-items-center d-flex text-white border-0" role="alert" aria-live="assertive"
+        aria-atomic="true">
+        <div class="toast-body" id="toast-context">
+
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+            aria-label="Close"></button>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        const chiNhanhJSON = sessionStorage.getItem('infoChiNhanh');
+        if (chiNhanhJSON) {
+            var chiNhanh = JSON.parse(chiNhanhJSON);
+            $("#tenChiNhanh").text(chiNhanh.tenChiNhanh);
+        } else {
+            $("#tenChiNhanh").text("Guest");
+        }
+    });
+    function Logout() {
+        event.preventDefault();
+        sessionStorage.removeItem('infoChiNhanh');
+        sessionStorage.removeItem('tokenData');
+        sessionStorage.removeItem('idNavBarActive');
+        location.href = "../dangnhap.html";
+    }
+</script>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bookverse</title>
+  <link rel="icon" type="image/x-icon" href="/Assects/images/cute.png">
+  <!-- Bootstrap css -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+  <!-- Boostrap separate -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+    crossorigin="anonymous"></script>
+  <!-- Bootstrap icon -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+  <!-- jquery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- chart.js -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+  <!-- Include side bar -->
+  <!-- <script>
+      $(function () {
+        $("#includedContent").load("nav2.html");
+      });
+    </script> -->
+
+  <!-- scripts -->
+  <script src="../Admin/services/generalServices.js"></script>
+  <!-- refund -->
+  <!-- <script src="../Admin/services/RefundServices.js"></script> -->
+
+  <script src="../Admin/services/ChiNhanhServices.js"></script>
+  <script src="models/ChiNhanh.js"></script>
+
+  <script src="../Admin/services/QLSanPhamServices.js"></script>
+  <script src="models/QLSanPham.js"></script>
+
+  <script src="../Admin/services/SanPhamServices.js"></script>
+  <script src="../Admin/models/SanPham.js"></script>
+
+  <script src="../Admin/services/HoaDonServices.js"></script>
+  <script src="models/HoaDon.js"></script>
+  <script src="models/ChiTietHoaDon.js"></script>
+
+  <script src="../Admin/services/PhieuNhapServices.js"></script>
+  <script src="models/PhieuNhap.js"></script>
+  <script src="models/ChiTietPhieuNhap.js"></script>
+  <link rel="stylesheet" href="/Assects/style.css">
+  <!-- print -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+  <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+</head>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+  }
+
+  .chart-heading {
+    font-family: "Rubik", sans-serif;
+    color: #023047;
+    text-transform: uppercase;
+    font-size: 24px;
+    text-align: center;
+  }
+
+  .chartCard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .chartBox {
+    width: 600px;
+    padding: 20px;
+    border-radius: 20px;
+    border: solid 3px rgba(54, 162, 235, 1);
+    background: white;
+  }
+</style>
+
+<body>
+  <div class="container-fluid">
+    <div class="row flex-nowrap">
+      <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+        <div id="includedSidebar" style="height: 100%;"></div>
+      </div>
+      <div class="col py-3" name="content">
+        <h2 class="chart-heading">Sản phẩm tồn kho</h2>
+        <div class="chartCard">
+          <div class="chartBox">
+            <canvas id="myChart"></canvas>
+          </div>
+        </div>
+        <main class="table mt-3" style="height: auto;">
+          <section class="table__header">
+            <h3>Hàng hóa tồn kho</h3>
+            <div class="input-group">
+              <input name="key" value="" type="search" id="key" placeholder="Tìm..." onchange="checkInputEmpty()" />
+              <button type="button" class="btn" onclick="searchSanPham()">
+                <i class="bi bi-search"></i>&nbsp
+              </button>
+            </div>
+            <div class="export__file">
+              <label for="export-file" class="export__file-btn" title="Export File"></label>
+              <input type="checkbox" id="export-file">
+              <div class="export__file-options">
+                <label for="export-file" id="toPDF">PDF <img src="/Assects/images/pdf.png" alt=""></label>
+                <label for="export-file" id="toEXCEL">EXCEL <img src="/Assects/images/excel.png" alt=""></label>
+              </div>
+            </div>
+          </section>
+          <section class="table__body" id="form-print">
+            <table class="table" id="data">
+              <thead>
+                <tr>
+                  <th> Id </th>
+                  <th> Tên mặt hàng </th>
+                  <th> Loại sản phẩm </th>
+                  <th> Thương hiệu </th>
+                  <th> Tác giả </th>
+                  <th> Thể loại </th>
+                  <th> Giá nhập </th>
+                  <th> Số lượng </th>
+                  <th> Hạn tồn </th>
+                  <th> Trạng thái </th>
+                  <th> Chi Nhánh </th>
+                </tr>
+              </thead>
+              <tbody id="table-body">
+              </tbody>
+            </table>
+            <div>
+              <span class="fw-bold fw-4" id="numBooksReturn"></span>
+              <br>
+              <span class="fw-bold fw-4" id="refundPricing"></span>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main JS -->
+  <script src="../Assects/AdminJS/tonkho.js"></script>
+  <script src="/Assects/script.js"></script>
+</body>
+
+</html>
+
+<script>
+  function searchSanPham() {
+    const searchText = $("#key").val().toLowerCase().trim();
+    const rows = $("#table-body tr");
+    console.log(searchText);
+    rows.each(function () {
+      const maSanPham = $(this).find("th:eq(0)").text().toLowerCase().trim();
+      const tenSanPham = $(this).find("td:eq(0)").text().toLowerCase().trim();
+      const loaiSanPham = $(this).find("td:eq(1)").text().toLowerCase().trim();
+      const thuongHieu = $(this).find("td:eq(2)").text().toLowerCase().trim();
+      const tacGia = $(this).find("td:eq(3)").text().toLowerCase().trim();
+      const theLoai = $(this).find("td:eq(4)").text().toLowerCase().trim();
+      const chiNhanh = $(this).find("td:eq(5)").text().toLowerCase().trim();
+      if (
+        maSanPham.includes(searchText) ||
+        tenSanPham.includes(searchText) ||
+        loaiSanPham.includes(searchText) ||
+        thuongHieu.includes(searchText) ||
+        tacGia.includes(searchText) ||
+        theLoai.includes(searchText) ||
+        chiNhanh.includes(searchText)
+      ) {
+        $(this).show();
+      } else {
+        $(this).hide();
+      }
+    });
+  }
+</script>

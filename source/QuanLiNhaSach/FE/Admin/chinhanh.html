@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bookverse</title>
+  <link rel="icon" type="image/x-icon" href="/Assects/images/cute.png">
+  <!-- Bootstrap css -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+  <!-- Boostrap separate -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+    crossorigin="anonymous"></script>
+  <!-- Bootstrap icon -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+  <!-- jquery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- print -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+  <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+  <!-- Include side bar -->
+  <!-- <script>
+    $(function () {
+      $("#includedSidebar").load("nav2.html");
+    });
+  </script> -->
+  <script src="services/ChiNhanhServices.js"></script>
+  <script src="models/ChiNhanh.js"></script>
+  <link rel="stylesheet" href="/Assects/style.css">
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row flex-nowrap">
+      <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+        <!-- -->
+        <!-- <div w3-include-html="nav2.html"></div> -->
+        <div id="includedSidebar" style="height: 100%;">
+        </div>
+      </div>
+      <div class="col py-3" name="content">
+        <main class="table">
+          <section class="table__header">
+            <h1>Quản lí chi nhánh</h1>
+            <div class="input-group">
+              <input name="taikhoan" value="" type="search" id="search" placeholder="Tìm..."
+                onchange="checkInputEmpty()" />
+              <button type="button" class="btn border-0" onclick="searchChiNhanh()">
+                <i class="bi bi-search"></i>&nbsp
+              </button>
+            </div>
+            <div class="export__file">
+              <label for="export-file" class="export__file-btn" title="Export File"></label>
+              <input type="checkbox" id="export-file">
+              <div class="export__file-options">
+                <label for="export-file" id="toPDF">PDF <img src="/Assects/images/pdf.png" alt=""></label>
+                <label for="export-file" id="toEXCEL">EXCEL <img src="/Assects/images/excel.png" alt=""></label>
+              </div>
+            </div>
+          </section>
+          <section class="table__body" id="form-print">
+            <table id="data">
+              <thead>
+                <tr>
+                  <th> Id <span class="icon-arrow">&UpArrow;</span></th>
+                  <th> Tên chi nhánh <span class="icon-arrow">&UpArrow;</span></th>
+                  <th> Địa chỉ <span class="icon-arrow">&UpArrow;</span></th>
+                  <th> Thông tin </th>
+                  <th> Hành động</th>
+                  <th> Trạng thái </th>
+                </tr>
+              </thead>
+              <tbody id="table-body">
+              </tbody>
+            </table>
+            <button type="button" class="btn btn-success m-2" id="addButton" data-bs-toggle="modal"
+              data-bs-target="#addModal">
+              <i class="bi bi-plus-circle-dotted"></i>&nbsp;Thêm
+            </button>
+          </section>
+        </main>
+      </div>
+    </div>
+    <!-- toast noti -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+      <div id="liveToast" class="toast align-items-center d-flex text-white border-0 bg-success" role="alert"
+        aria-live="assertive" aria-atomic="true">
+        <div class="toast-body" id="toast-context"></div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+          aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+  <!-- main js -->
+  <script src="../Assects/AdminJS/chinhnhanh.js"></script>
+  <script src="/Assects/script.js"></script>
+
+</body>
+<!-- Modal sửa thông tin chi nhánh -->
+<div class="modal fade" id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Sửa thông tin chi nhánh</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body d-flex flex-column">
+        <div>Tên chi nhánh</div>
+        <div>
+          <input type="text" value="" id="chiNhanhName" class="form-control" required />
+        </div>
+        <div>Địa chỉ</div>
+        <div>
+          <input type="text" value="" id="chiNhanhAddress" class="form-control" required />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <input type="hidden" name="" id="id-chiNhanhEdit" value="" />
+        <input type="hidden" name="" id="chiNhanhEmail" value="" />
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <button type="submit" id="edit-button" class="btn btn-primary" data-bs-dismiss="modal"
+          onclick="updateChiNhanh($('#chiNhanhName').val(),$('#chiNhanhAddress').val(),$('#id-chiNhanhEdit').val())">Lưu</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal xác nhận xóa chi nhánh -->
+<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xóa chi nhánh</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body d-flex flex-column">
+        <div class="fw-bold" id="text-confirm"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <input type="hidden" name="" id="id-chinhanh" value="" />
+        <button type="button" id="del-button" data-bs-dismiss="modal" onclick="deleteChiNhanh($('#id-chinhanh').val())"
+          data-bs-dismiss="modal" class="btn btn-danger">Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal thêm chi nhánh mới -->
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">Thêm mới chi nhánh</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Form thêm mới -->
+        <div id="addForm">
+          <h3>Thêm chi nhánh mới</h3>
+          <form class="needs-validation">
+            <div class="mb-3">
+              <label for="txtTenChiNhanh" class="form-label">Tên chi nhánh</label>
+              <input type="text" class="form-control" id="txtTenChiNhanh"
+                aria-describedby="validationServerUsernameFeedback" required />
+            </div>
+            <div class="mb-3">
+              <label for="txtDiaChi" class="form-label">Địa chỉ</label>
+              <input type="text" class="form-control" id="txtDiaChi" required />
+            </div>
+            <div class="mb-3">
+              <label for="txtDiaChi" class="form-label">Email</label>
+              <input type="text" class="form-control" id="txtEmail" required />
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+              <button type="button" class="btn btn-primary" id="btnSave" data-bs-dismiss="modal"
+                onclick="addChiNhanh($('#txtTenChiNhanh').val(),$('#txtDiaChi').val(),$('#txtEmail').val())">Lưu</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</html>
+
+<script>
+  function searchChiNhanh() {
+    const search = document.querySelector('.input-group input'),
+      table_rows = document.querySelectorAll('tbody tr'),
+      table_headings = document.querySelectorAll('thead th');
+    table_rows.forEach((row, i) => {
+      let table_data = row.textContent.toLowerCase().trim(),
+        search_data = search.value.toLowerCase().trim();
+
+      row.classList.toggle('hide', table_data.indexOf(search_data) < 0);
+      row.style.setProperty('--delay', i / 25 + 's');
+    })
+
+    document.querySelectorAll('tbody tr:not(.hide)').forEach((visible_row, i) => {
+      visible_row.style.backgroundColor = (i % 2 == 0) ? 'transparent' : '#0000000b';
+    });
+  }
+</script>

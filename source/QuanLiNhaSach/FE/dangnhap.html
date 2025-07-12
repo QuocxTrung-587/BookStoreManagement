@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookverse</title>
+    <!-- Bootstrap css -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Boostrap separate -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="Admin/services/ChiNhanhServices.js"></script>
+
+    <link rel="icon" type="image/x-icon" href="/Assects/images/cute.png">
+
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <!-- LEFT: image -->
+            <div class="col-md-6 col-lg-6 d-none d-md-block vh-100 p-0">
+                <img class="h-100 w-100 " src="./Assects/images/ad-form.gif" alt="adv">
+            </div>
+            <!-- RIGHT: FORM -->
+            <div class="col-md-6 col-lg-6 d-flex justify-content-center align-items-center vh-100"
+                style="background-color: #b0d4b8;">
+                <form id="loginForm" method="post" enctype="multipart/form" class="needs-validation w-75">
+                    <input type='hidden' name='SignIn' value='true'>
+                    <h1 class="text-left"><img src="./Assects/images/logo_book.png" alt="" width="500px"></h1>
+                    <h3 class="text-left fw-bold">BẠN TÌM - CHÚNG TÔI CÓ</h3><br>
+                    <div class="form-group">
+                        <label for="username">Tài khoản</label>
+                        <input name="username" type="text" class="form-control" id="username" required>
+                        <div class="invalid-feedback">Vui lòng nhập tài khoản.</div>
+                    </div><br>
+                    <div class="form-group mb-0">
+                        <label for="password" class="label">Mật khẩu</label>
+                        <input name="password" type="password" class="form-control" id="password" required>
+                        <div class="invalid-feedback">Vui lòng nhập mật khẩu.</div>
+                    </div><br>
+                    <button class="border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#exampleModal1"
+                    onclick="openChangePsdModal()"><a href="#">Quên mật khẩu?</a></button>
+                    <div class="d-grid gap-2">
+                        <button class="mx-auto btn btn-dark fa-lg mb-3" id="login" type="submit">Đăng nhập</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- toast -->
+        <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+            <div id="liveToast" class="toast align-items-center d-flex text-white border-0" role="alert"
+                aria-live="assertive" aria-atomic="true">
+                <div class="toast-body" id="toast-context">
+
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+</body>
+<!-- Modal quên mật khẩu -->
+<div class="modal fade" id="exampleModal1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Quên mật khẩu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column">
+                <div class="row mb-3">
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <input type="text" class="form-control border-dark" id="emailGG"
+                                name="emailGG" placeholder="" value="">
+                            <label for="floatingInputGrid">Nhập tài khoản email</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" id="changePassword" data-bs-dismiss="modal" class="btn btn-primary"
+                    onclick="forgotPassword($('#emailGG').val())">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>
+<script>
+    function login(username, password) {
+        $.ajax({
+            url: "http://localhost:8080/taiKhoan",
+            type: "POST",
+            data: JSON.stringify({
+                "taiKhoan": username,
+                "matKhau": password
+            }),
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+                // console.log(response)
+                const toast = new bootstrap.Toast($("#liveToast"));
+                if (response.status === "ok") {
+                    $("#liveToast").removeClass("bg-danger");
+                    $("#liveToast").addClass("bg-success");
+                    // $("#toast-context").text(response.message);
+                    $("#toast-context").text("Đăng nhập thành công");
+                    toast.show();
+                    // Token saved
+                    token = sessionStorage.setItem("tokenData", response.data)
+                    getAndSaveChiNhanhInfo(username, password);
+                }
+            },
+            error: function (response) {
+                handleLoginError(response.responseJSON);
+            }
+        });
+    }
+
+
+    function handleLoginError(errorResponse) {
+        $("#liveToast").removeClass("bg-success");
+        $("#liveToast").addClass("bg-danger");
+        const toast = new bootstrap.Toast($("#liveToast"));
+        $("#toast-context").text(errorResponse.message);
+        toast.show();
+    }
+
+    function getAndSaveChiNhanhInfo(username, password) {
+        token = sessionStorage.getItem("tokenData");
+        $.ajax({
+            url: "http://localhost:8080/chiNhanhByTK",
+            type: "POST",
+            data: JSON.stringify({
+                "taiKhoan": username,
+                "matKhau": password
+            }),
+            contentType: "application/json",
+            dataType: "json",
+            headers: {
+                Authorization: "Bearer "  + token
+            },
+            success: function (response) {
+                const chiNhanh = {
+                    id: response.data.id,
+                    tenChiNhanh: response.data.tenChiNhanh,
+                    diaChi: response.data.diaChi,
+                    taiKhoanFK: response.data.taiKhoanFK
+                };
+                saveChiNhanhToSession(chiNhanh);
+            }
+        });
+    }
+
+    function saveChiNhanhToSession(chiNhanh) {
+        const chiNhanhJSON = JSON.stringify(chiNhanh);
+        // Lưu thông tin chi nhánh vào Session Storage
+        sessionStorage.setItem('infoChiNhanh', chiNhanhJSON);
+        // Sau khi lưu vào Session Storage, bạn có thể chuyển hướng người dùng đến trang User/index.html hoặc Admin/index.html
+        if(chiNhanh.taiKhoanFK.taiKhoan == "this.is.manager.fahasa@gmail.com"){
+            setTimeout(function () {
+                window.location.href = "Admin/index.html";
+            }, 2000);
+        }
+        else{
+            setTimeout(function () {
+                window.location.href = "User/index.html";
+            }, 2000);
+        }
+       
+    }
+    $(document).ready(function () {
+        $("#loginForm").submit(function (event) {
+            event.preventDefault();
+            var username = $("#username").val();
+            var password = $("#password").val();
+            login(username, password);
+        });
+    });
+
+</script>

@@ -1,0 +1,62 @@
+<div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-4 text-white min-vh-100" style="height: 100%;">
+    <div class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+        <a href="./index.html"><img src="../Assects/images/logo_book3.png" id="navlink0" class="img-fluid" alt="" width="200px"></a>
+    </div>
+    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start " id="menu" style="width: 100%;">
+        <li style="width: 100%;">
+            <a href="./chinhanh.html" class="nav-link px-0 align-middle" id="navlink1">
+                <i class="fs-4 bi bi-pencil-square"></i> <span class="ms-1 d-none d-sm-inline">Quản lí chi nhánh</span> </a>
+        </li>
+        <li>
+            <a href="./phieunhap.html" class="nav-link px-0 align-middle" id="navlink2">
+                <i class="fs-4 bi bi-file-earmark-spreadsheet"></i><span class="ms-1 d-none d-sm-inline ">Quản lí phiếu nhập</span> </a>
+        </li>
+        <li>
+            <a href="#submenu4" data-bs-toggle="collapse" class="nav-link px-0 align-middle" id="navlink3">
+                <i class="fs-4 bi bi-book-half"></i> <span class="ms-1 d-none d-sm-inline ">Quản lí hàng hóa</span> </a>
+            <ul class="collapse nav flex-column ms-1" id="submenu4" data-bs-parent="#menu">
+                <li class="w-100">
+                    <a href="./hanghoatong.html" class="nav-link px-0" id="navlink4"> <span class="d-none d-sm-inline">Tổng công ty</span></a>
+                </li>
+                <li>
+                    <a href="./hanghoachinhanh.html" class="nav-link px-0" id="navlink5"> <span class="d-none d-sm-inline">Chi nhánh</span></a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle" id="navlink6">
+                <i class="fs-4 bi bi-database-check"></i> <span class="ms-1 d-none d-sm-inline ">Quản lí thống kê</span> </a>
+            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
+                <li class="w-100">
+                    <a href="./tonkho.html" class="nav-link px-0" id="navlink7"> <span class="d-none d-sm-inline">Tồn kho</span></a>
+                </li>
+                <li>
+                    <a href="./thuchi.html" class="nav-link px-0" id="navlink8"> <span class="d-none d-sm-inline">Thu chi</span></a>
+                </li>
+                <li>
+                    <a href="./yeuthich.html" class="nav-link px-0" id="navlink9"> <span class="d-none d-sm-inline">Yêu thích</span></a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <hr>
+    <div class="dropdown pb-4 mt-auto">
+        <div class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="../Assects/images/cute.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
+            <!-- Tên chi nhánh -->
+            <span class="d-none d-sm-inline mx-1">Fahasa - Tổng công ty</span>
+        </div>
+        <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+            <li><a class="dropdown-item"  onclick="Logout()">Đăng xuất</a></li>
+        </ul>
+    </div>
+</div>
+<script>
+        function Logout() {
+        event.preventDefault();
+        sessionStorage.removeItem('infoChiNhanh');
+        sessionStorage.removeItem('tokenData');
+        sessionStorage.removeItem('idNavBarActive');
+        location.href = "../dangnhap.html";
+    }
+</script>
